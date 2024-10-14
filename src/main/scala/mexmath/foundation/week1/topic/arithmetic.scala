@@ -43,7 +43,7 @@ object arithmetic:
     override def toString: String = s"($left * $right)"
 
   extension (expr: Expression)
-    
+
     @targetName("Addition")
     infix def +(that: Expression): Addition = Addition(expr, that)
 
