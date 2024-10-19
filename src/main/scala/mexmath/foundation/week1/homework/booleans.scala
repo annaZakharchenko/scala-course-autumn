@@ -12,7 +12,7 @@ object booleans:
 
   type True = True.type
   case object True extends Boolean
-
+  
   type False = False.type
   case object False extends Boolean
 
@@ -28,20 +28,15 @@ object booleans:
     def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, True) => True
       case _ => False // other cases((True, False) ,(False, True) and (False, False)) will return False
-    override def toString: String = s"(${left.toString} ∧ ${right.toString})"
+    override def toString: String = s"(${left.toString} ∧ ${right.toString})"  
 
   // Provide implementation for `Disjunction` type
   //type Disjunction
   case class Disjunction(left: Expression, right: Expression) extends Expression:
-    def evaluate: Boolean = 
-      if left.evaluate == True then True 
-      else right.evaluate
-
-    /*def evaluate: Boolean = (left.evaluate, right.evaluate) match
+    def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, right) => True
       case (False, True) => True
-      case (False, False) => False*/
-    
+      case (False, False) => False
     override def toString: String = s"(${left.toString} ∨ ${right.toString}) "
 
   // Provide implementation for `Implication` type
@@ -49,7 +44,7 @@ object booleans:
   case class Implication(left: Expression, right: Expression) extends Expression:
     def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, False) => False
-      case _ => True // other cases ((False, False), (False, True) and(True, True)) return True
+      case _ => True // other cases ((False, False), (False, True) and(True, True)) return True 
     override def toString: String = s"(${left.toString} → ${right.toString}) "
 
 
@@ -67,5 +62,14 @@ object booleans:
     @targetName("Implication")
     infix def →(that: Expression): Implication = Implication(expr, that)
 
- 
+ /* @main def Main(): Unit =
+    val expr1: Expression = True ∧ False
+    val expr2: Expression = !False
+    val expr3: Expression = False → False
+    val expr4: Expression = (True ∧ False) ∨ (True → False)
+    
+    println(s"${expr1.toString} = ${expr1.evaluate}")
+    println(s"${expr2.toString} = ${expr2.evaluate}")
+    println(s"${expr3.toString} = ${expr3.evaluate}")
+    println(s"${expr4.toString} = ${expr4.evaluate}")*/
     
