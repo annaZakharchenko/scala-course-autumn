@@ -36,6 +36,7 @@ object booleans:
     def evaluate: Boolean = 
       if left.evaluate == True then True 
       else right.evaluate
+
     /*def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, right) => True
       case (False, True) => True
