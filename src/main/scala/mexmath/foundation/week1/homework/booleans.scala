@@ -65,14 +65,5 @@ object booleans:
     @targetName("Implication")
     infix def →(that: Expression): Implication = Implication(expr, that)
 
- /* @main def Main(): Unit =
-    val expr1: Expression = True ∧ False
-    val expr2: Expression = !False
-    val expr3: Expression = False → False
-    val expr4: Expression = (True ∧ False) ∨ (True → False)
-    
-    println(s"${expr1.toString} = ${expr1.evaluate}")
-    println(s"${expr2.toString} = ${expr2.evaluate}")
-    println(s"${expr3.toString} = ${expr3.evaluate}")
-    println(s"${expr4.toString} = ${expr4.evaluate}")*/
+
     
