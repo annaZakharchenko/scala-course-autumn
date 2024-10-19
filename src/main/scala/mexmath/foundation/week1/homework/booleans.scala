@@ -33,10 +33,13 @@ object booleans:
   // Provide implementation for `Disjunction` type
   //type Disjunction
   case class Disjunction(left: Expression, right: Expression) extends Expression:
-    def evaluate: Boolean = (left.evaluate, right.evaluate) match
+    def evaluate: Boolean =
+      if left.evaluate == True then True
+      else right.evaluate
+    /* def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, right) => True
       case (False, True) => True
-      case (False, False) => False
+      case (False, False) => False*/
     override def toString: String = s"(${left.toString} ∨ ${right.toString}) "
 
   // Provide implementation for `Implication` type
