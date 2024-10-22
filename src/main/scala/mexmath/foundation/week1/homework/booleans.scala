@@ -36,7 +36,6 @@ object booleans:
     def evaluate: Boolean =
       if left.evaluate == True then True
       else right.evaluate
-
     override def toString: String = s"(${left.toString} ∨ ${right.toString}) "
 
   // Provide implementation for `Implication` type
@@ -47,7 +46,7 @@ object booleans:
       case _ => True // other cases ((False, False), (False, True) and(True, True)) return True 
     override def toString: String = s"(${left.toString} → ${right.toString}) "
 
-  def  transformImplications(expr: Expression): Expression = expr match {
+  def transformImplications(expr: Expression): Expression = expr match {
     case True => True
     case False => False
     case Negation(inner) =>
