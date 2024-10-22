@@ -12,6 +12,7 @@ object BooleansSpecification extends Properties("Booleans"):
   include(DisjunctionSpecification)
   include(ImplicationSpecification)
   include(AxiomsSpecification)
+  include(TransformationSpecification)
 
 end BooleansSpecification
 
@@ -57,6 +58,7 @@ object ImplicationSpecification extends Properties("Implication"):
 
 end ImplicationSpecification
 
+
 val expressionGen: Gen[Expression] =
   Gen.oneOf(True, False)
 
@@ -96,3 +98,63 @@ object AxiomsSpecification extends Properties("Axioms"):
     (a: Expression) => (a ∨ !a).evaluate == True
 
 end AxiomsSpecification
+
+
+object TransformationSpecification extends Properties("Transformation"):
+  property("a → (b → a)") = forAll(expressionGen, expressionGen):
+    (a: Expression, b: Expression) =>
+      val expr = a → (b → a)
+      transformImplications(expr).evaluate == True
+
+  property("(a → (b → c)) → ((a → b) → (a → c))") = forAll(expressionGen, expressionGen, expressionGen):
+    (a: Expression, b: Expression, c: Expression) =>
+      val expr = (a → (b → c)) → ((a → b) → (a → c))
+      transformImplications(expr).evaluate == True
+
+  property("(a ∧ b) → a") = forAll(expressionGen, expressionGen):
+    (a: Expression, b: Expression) =>
+      val expr = (a ∧ b) → a
+      transformImplications(expr).evaluate == True
+
+  property("(a ∧ b) → b") = forAll(expressionGen, expressionGen):
+    (a: Expression, b: Expression) =>
+      val expr = (a ∧ b) → b
+      transformImplications(expr).evaluate == True
+
+  property("a → (b → (a ∧ b))") = forAll(expressionGen, expressionGen):
+    (a: Expression, b: Expression) =>
+      val expr = a → (b → (a ∧ b))
+      transformImplications(expr).evaluate == True
+
+  property("a → (a ∨ b)") = forAll(expressionGen, expressionGen):
+    (a: Expression, b: Expression) =>
+      val expr = a → (a ∨ b)
+      transformImplications(expr).evaluate == True
+
+  property("b → (a ∨ b)") = forAll(expressionGen, expressionGen):
+    (a: Expression, b: Expression) =>
+      val expr = b → (a ∨ b)
+      transformImplications(expr).evaluate == True
+
+  property("(a → c) → ((b → c) → ((a ∨ b) → c))") = forAll(expressionGen, expressionGen, expressionGen):
+    (a: Expression, b: Expression, c: Expression) =>
+      val expr = (a → c) → ((b → c) → ((a ∨ b) → c))
+      transformImplications(expr).evaluate == True
+
+  property("!a → (a → b)") = forAll(expressionGen, expressionGen):
+    (a: Expression, b: Expression) =>
+      val expr = !a → (a → b)
+      transformImplications(expr).evaluate == True
+
+  property("(a → b) → ((a → !b) → !a)") = forAll(expressionGen, expressionGen):
+    (a: Expression, b: Expression) =>
+      val expr = (a → b) → ((a → !b) → !a)
+      transformImplications(expr).evaluate == True
+
+  property("a ∨ !a") = forAll(expressionGen):
+    (a: Expression) =>
+      val expr = a ∨ !a
+      transformImplications(expr).evaluate == True
+end TransformationSpecification
+      
+      
