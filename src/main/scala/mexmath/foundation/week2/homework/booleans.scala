@@ -10,7 +10,7 @@ object booleans:
 
   sealed trait Boolean extends Expression:
     val evaluate: Expression                                               = this
-    def substitute(variable: Variable, expression: Expression): Expression = ???
+    def substitute(variable: Variable, expression: Expression): Expression = this
 
   type True = True.type
   case object True extends Boolean
@@ -18,25 +18,53 @@ object booleans:
   type False = False.type
   case object False extends Boolean
 
-  type Variable
+
+  case class Variable(name: String) extends Expression:
+    def evaluate: Expression = this
+    def substitute(variable: Variable, expression: Expression): Expression =
+      if this == variable then expression
+      else this
+    override def toString: String = name
+
 
   case class Negation(expression: Expression) extends Expression:
+    def evaluate: Expression = expression.evaluate match
+      case True => False
+      case False => True
+    def substitute(variable: Variable, expression: Expression): Expression =
+      Negation(this.expression.substitute(variable, expression))
+    override def toString: String = s"!(${expression.toString})"
 
-    def evaluate: Expression                                               = ???
-    def substitute(variable: Variable, expression: Expression): Expression = ???
 
-    override def toString: String = ???
+  case class Conjunction(left: Expression, right: Expression) extends Expression:
+    def evaluate: Boolean = (left.evaluate, right.evaluate) match
+      case (True, True) => True
+      case _ => False // other cases((True, False) ,(False, True) and (False, False)) will return False
+    def substitute(variable: Variable, expression: Expression): Expression =
+      Conjunction(left.substitute(variable,expression), right.substitute(variable, expression))
+    override def toString: String = s"(${left.toString} ∧ ${right.toString})"
 
-  // Provide implementation for `Conjunction` type
-  type Conjunction
 
-  // Provide implementation for `Disjunction` type
-  type Disjunction
+  case class Disjunction(left: Expression, right: Expression) extends Expression:
+    def evaluate: Boolean = (left.evaluate, right.evaluate) match
+      case (True, _) => True
+      case (_, True) => True
+      case _ => False
+    def substitute(variable: Variable, expression: Expression): Expression =
+      Disjunction(left.substitute(variable,expression), right.substitute(variable, expression))
+    override def toString: String = s"(${left.toString} ∨ ${right.toString}) "
 
-  // Provide implementation for `Implication` type
-  type Implication
 
-  // Add conversion from `String` to `Variable`
+  case class Implication(left: Expression, right: Expression) extends Expression:
+    def evaluate: Boolean = (left.evaluate, right.evaluate) match
+      case (True, False) => False
+      case _ => True // other cases ((False, False), (False, True) and(True, True)) return True
+    def substitute(variable: Variable, expression: Expression): Expression =
+      Implication(left.substitute(variable, expression), right.substitute(variable, expression))
+    override def toString: String = s"(${left.toString} → ${right.toString})"
+
+  given Conversion[String, Variable] with
+    def apply(str: String): Variable = Variable(str)
 
   extension (expr: Expression)
 
@@ -44,10 +72,10 @@ object booleans:
     infix def unary_! : Negation = Negation(expr)
 
     @targetName("Conjunction")
-    infix def ∧(that: Expression): Conjunction = ???
+    infix def ∧(that: Expression): Conjunction = Conjunction(expr, that)
 
     @targetName("Disjunction")
-    infix def ∨(that: Expression): Disjunction = ???
+    infix def ∨(that: Expression): Disjunction = Disjunction(expr, that)
 
     @targetName("Implication")
-    infix def →(that: Expression): Implication = ???
+    infix def →(that: Expression): Implication =  Implication(expr, that)
