@@ -12,10 +12,10 @@ object booleans:
     val evaluate: Expression                                               = this
     def substitute(variable: Variable, expression: Expression): Expression = this
 
-  type True = True.type
+  //type True = True.type
   case object True extends Boolean
 
-  type False = False.type
+  //type False = False.type
   case object False extends Boolean
 
   case class Variable(name: String) extends Expression:
@@ -27,14 +27,15 @@ object booleans:
     override def toString: String = name
 
   case class Negation(expression: Expression) extends Expression:
-    def evaluate: Expression = expression.evaluate match
-      case True  => True
+    def evaluate: Expression = expression.evaluate match {
+      case True => True
       case False => False
-      case Variable(_) => this
-      case Negation(expr) => expr.evaluate match {
-        case True => False
-        case False => True
-      }
+      case variable: Variable => this
+      case Negation(expr) => expr.evaluate
+      case Conjunction(left, right) => Negation(Conjunction(left, right)).evaluate
+      case Disjunction(left, right) => Negation(Disjunction(left, right)).evaluate
+      case Implication(left, right) => Negation(Implication(left, right)).evaluate
+    }
 
     def substitute(variable: Variable, expression: Expression): Expression =
       Negation(this.expression.substitute(variable, expression))
