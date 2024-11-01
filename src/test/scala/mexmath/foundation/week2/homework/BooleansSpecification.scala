@@ -36,8 +36,9 @@ object ConjunctionSpecification extends Properties("Conjunction"):
     (True ∧ value).evaluate == value
   }
 
-  property("False ∧ value is False") = forAll: (value: Boolean) =>
+  property("False ∧ value is False") = forAll { (value: Boolean) =>
     (False ∧ value).evaluate == False
+  }
 
 end ConjunctionSpecification
 
@@ -58,7 +59,7 @@ object ImplicationSpecification extends Properties("Implication"):
     (False → value).evaluate == True
 
   property("False → value is True") = forAll: (value: Boolean) =>
-    (True → value).evaluate == value
+    (True → value).evaluate == False
 
 end ImplicationSpecification
 
@@ -133,7 +134,7 @@ object ExpressionSubstitutionSpecification extends Properties("Expression Substi
   }
 
   property("substitution into left ∨ right should be equal to substitution into left ∨ substitution into right") =  forAll { (left: Expression, right: Expression, v: Variable, replacement: Expression) =>
-    (left ∧ right).substitute(v, replacement) == left.substitute(v, replacement) ∧ right.substitute(v, replacement)
+    (left ∨ right).substitute(v, replacement) == left.substitute(v, replacement) ∨ right.substitute(v, replacement)
   }
 
   property("substitution into left → right should be equal to substitution into left → substitution into right") = forAll { (left: Expression, right: Expression, v: Variable, replacement: Expression) =>

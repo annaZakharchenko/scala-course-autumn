@@ -18,47 +18,55 @@ object booleans:
   type False = False.type
   case object False extends Boolean
 
-
   case class Variable(name: String) extends Expression:
     def evaluate: Expression = this
+
     def substitute(variable: Variable, expression: Expression): Expression =
       if this == variable then expression
       else this
     override def toString: String = name
 
-
   case class Negation(expression: Expression) extends Expression:
     def evaluate: Expression = expression.evaluate match
-      case True => False
-      case False => True
+      case True  => True
+      case False => False
+      case Variable(_) => this
+      case Negation(expr) => expr.evaluate match {
+        case True => False
+        case False => True
+      }
+
     def substitute(variable: Variable, expression: Expression): Expression =
       Negation(this.expression.substitute(variable, expression))
     override def toString: String = s"!(${expression.toString})"
 
-
   case class Conjunction(left: Expression, right: Expression) extends Expression:
-    def evaluate: Boolean = (left.evaluate, right.evaluate) match
+
+    def evaluate: Expression = (left.evaluate, right.evaluate) match
       case (True, True) => True
-      case _ => False // other cases((True, False) ,(False, True) and (False, False)) will return False
+      case _            => False // other cases((True, False) ,(False, True) and (False, False)) will return False
+
     def substitute(variable: Variable, expression: Expression): Expression =
-      Conjunction(left.substitute(variable,expression), right.substitute(variable, expression))
+      Conjunction(left.substitute(variable, expression), right.substitute(variable, expression))
     override def toString: String = s"(${left.toString} ∧ ${right.toString})"
 
-
   case class Disjunction(left: Expression, right: Expression) extends Expression:
-    def evaluate: Boolean = (left.evaluate, right.evaluate) match
+
+    def evaluate: Expression = (left.evaluate, right.evaluate) match
       case (True, _) => True
       case (_, True) => True
-      case _ => False
+      case _         => False
+
     def substitute(variable: Variable, expression: Expression): Expression =
-      Disjunction(left.substitute(variable,expression), right.substitute(variable, expression))
+      Disjunction(left.substitute(variable, expression), right.substitute(variable, expression))
     override def toString: String = s"(${left.toString} ∨ ${right.toString}) "
 
-
   case class Implication(left: Expression, right: Expression) extends Expression:
-    def evaluate: Boolean = (left.evaluate, right.evaluate) match
+
+    def evaluate: Expression = (left.evaluate, right.evaluate) match
       case (True, False) => False
-      case _ => True // other cases ((False, False), (False, True) and(True, True)) return True
+      case _             => True // other cases ((False, False), (False, True) and(True, True)) return True
+
     def substitute(variable: Variable, expression: Expression): Expression =
       Implication(left.substitute(variable, expression), right.substitute(variable, expression))
     override def toString: String = s"(${left.toString} → ${right.toString})"
@@ -78,4 +86,4 @@ object booleans:
     infix def ∨(that: Expression): Disjunction = Disjunction(expr, that)
 
     @targetName("Implication")
-    infix def →(that: Expression): Implication =  Implication(expr, that)
+    infix def →(that: Expression): Implication = Implication(expr, that)
