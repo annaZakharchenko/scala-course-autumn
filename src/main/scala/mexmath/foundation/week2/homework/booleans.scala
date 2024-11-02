@@ -9,14 +9,18 @@ object booleans:
     def substitute(variable: Variable, expression: Expression): Expression
 
   sealed trait Boolean extends Expression:
-    val evaluate: Expression                                               = this
+    def evaluate: Expression 
+    def substitute(variable: Variable, expression: Expression): Expression
+
+  case object True extends Boolean:
+    def evaluate: Expression = this
+
     def substitute(variable: Variable, expression: Expression): Expression = this
 
-  //type True = True.type
-  case object True extends Boolean
+  case object False extends Boolean:
+    def evaluate: Expression = this
 
-  //type False = False.type
-  case object False extends Boolean
+    def substitute(variable: Variable, expression: Expression): Expression = this
 
   case class Variable(name: String) extends Expression:
     def evaluate: Expression = this
@@ -24,59 +28,59 @@ object booleans:
     def substitute(variable: Variable, expression: Expression): Expression =
       if this == variable then expression
       else this
+
     override def toString: String = name
 
   case class Negation(expression: Expression) extends Expression:
     def evaluate: Expression = expression.evaluate match {
-      case True => True
-      case False => False
-      case variable: Variable => this
-      case Negation(expr) => expr.evaluate
-      case Conjunction(left, right) => Negation(Conjunction(left, right)).evaluate
-      case Disjunction(left, right) => Negation(Disjunction(left, right)).evaluate
-      case Implication(left, right) => Negation(Implication(left, right)).evaluate
+      case True  => False
+      case False => True
+      case expr  => Negation(expr) 
     }
 
     def substitute(variable: Variable, expression: Expression): Expression =
       Negation(this.expression.substitute(variable, expression))
+
     override def toString: String = s"!(${expression.toString})"
 
   case class Conjunction(left: Expression, right: Expression) extends Expression:
-
-    def evaluate: Expression = (left.evaluate, right.evaluate) match
+    def evaluate: Expression = (left.evaluate, right.evaluate) match {
       case (True, True) => True
-      case _            => False // other cases((True, False) ,(False, True) and (False, False)) will return False
+      case _            => False 
+    }
 
     def substitute(variable: Variable, expression: Expression): Expression =
       Conjunction(left.substitute(variable, expression), right.substitute(variable, expression))
+
     override def toString: String = s"(${left.toString} ∧ ${right.toString})"
 
   case class Disjunction(left: Expression, right: Expression) extends Expression:
-
-    def evaluate: Expression = (left.evaluate, right.evaluate) match
+    def evaluate: Expression = (left.evaluate, right.evaluate) match {
       case (True, _) => True
       case (_, True) => True
       case _         => False
+    }
 
     def substitute(variable: Variable, expression: Expression): Expression =
       Disjunction(left.substitute(variable, expression), right.substitute(variable, expression))
-    override def toString: String = s"(${left.toString} ∨ ${right.toString}) "
+
+    override def toString: String = s"(${left.toString} ∨ ${right.toString})"
 
   case class Implication(left: Expression, right: Expression) extends Expression:
-
-    def evaluate: Expression = (left.evaluate, right.evaluate) match
+    def evaluate: Expression = (left.evaluate, right.evaluate) match {
       case (True, False) => False
-      case _             => True // other cases ((False, False), (False, True) and(True, True)) return True
+      case _             => True 
+    }
 
     def substitute(variable: Variable, expression: Expression): Expression =
       Implication(left.substitute(variable, expression), right.substitute(variable, expression))
+
     override def toString: String = s"(${left.toString} → ${right.toString})"
 
   given Conversion[String, Variable] with
     def apply(str: String): Variable = Variable(str)
 
   extension (expr: Expression)
-
     @targetName("Negation")
     infix def unary_! : Negation = Negation(expr)
 

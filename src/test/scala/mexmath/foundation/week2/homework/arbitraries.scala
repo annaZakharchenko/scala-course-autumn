@@ -14,23 +14,23 @@ object arbitraries:
     name <- genVariableName
   yield Variable(name)
 
-  val genNegation: Gen[Negation] = for 
-    expression <- genExpression
+  val genNegation: Gen[Negation] = for
+    expression <- lzy(genExpression)
   yield Negation(expression)
 
   val genConjunction: Gen[Conjunction] = for
-    left <- genExpression
-    right <- genExpression
+    left <- lzy(genExpression)
+    right <- lzy(genExpression)
   yield Conjunction(left, right)
 
   val genDisjunction: Gen[Disjunction] = for
-    left <- genExpression
-    right <- genExpression
+    left <- lzy(genExpression)
+    right <- lzy(genExpression)
   yield Disjunction(left, right)
 
   val genImplication: Gen[Implication] = for
-    left <- genExpression
-    right <- genExpression
+    left <- lzy(genExpression)
+    right <- lzy(genExpression)
   yield Implication(left, right)
 
   lazy val genExpression: Gen[Expression] = Gen.oneOf(

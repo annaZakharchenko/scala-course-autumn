@@ -4,6 +4,7 @@ import mexmath.foundation.week2.homework.arbitraries.given
 import mexmath.foundation.week2.homework.booleans.*
 import org.scalacheck.*
 import org.scalacheck.Prop.{forAll, propBoolean}
+import org.scalacheck.Gen.lzy
 
 object BooleansSpecification extends Properties("Booleans"):
 
@@ -56,10 +57,10 @@ end DisjunctionSpecification
 object ImplicationSpecification extends Properties("Implication"):
 
   property("True → value is value") = forAll: (value: Boolean) =>
-    (False → value).evaluate == True
+    (True → value).evaluate == value
 
   property("False → value is True") = forAll: (value: Boolean) =>
-    (True → value).evaluate == False
+    (False → value).evaluate == True
 
 end ImplicationSpecification
 
@@ -118,7 +119,7 @@ object VariableSubstitutionSpecification extends Properties("Variable Substituti
   }
 
   property("substitution into the same variable should return the given expression") = forAll { (v: Variable, expr: Expression) =>
-    expr.substitute(v, True) == True
+    expr.substitute(v, expr) == expr
   }
 
 end VariableSubstitutionSpecification
