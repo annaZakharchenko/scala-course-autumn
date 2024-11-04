@@ -33,13 +33,13 @@ object arbitraries:
     right <- lzy(genExpression)
   yield Implication(left, right)
 
-  lazy val genExpression: Gen[Expression] = Gen.oneOf(
-    genBoolean,
-    genVariable,
-    genNegation,
-    genConjunction,
-    genDisjunction,
-    genImplication
+  lazy val genExpression: Gen[Expression] = Gen.frequency(
+    (1, genBoolean),
+    (1, genVariable),
+    (1, genNegation),
+    (1, genConjunction),
+    (1, genDisjunction),
+    (1, genImplication)
   )
 
   given Arbitrary[Boolean]    =  Arbitrary(genBoolean)
