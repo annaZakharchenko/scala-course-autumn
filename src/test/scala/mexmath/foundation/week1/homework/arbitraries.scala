@@ -32,10 +32,14 @@ object arbitraries:
     yield Implication(left, right)
     
 
-  lazy val genExpression: Gen[Expression] =
-    Gen.oneOf(genBoolean, genNegation, genConjunction, genDisjunction, genImplication)
-    
-
+  lazy val genExpression: Gen[Expression] = Gen.frequency(
+    (1,genBoolean),
+    (1,genNegation), 
+    (1,genConjunction), 
+    (1,genDisjunction), 
+    (1,genImplication)
+  )
+  
   given Arbitrary[Boolean] = Arbitrary(genBoolean) 
 
   given Arbitrary[Expression] = Arbitrary(genExpression)

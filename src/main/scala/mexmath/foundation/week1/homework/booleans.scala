@@ -18,32 +18,28 @@ object booleans:
 
   case class Negation(expression: Expression) extends Expression:
     def evaluate: Boolean = expression.evaluate match
-      case False => True // true
-      case True => False // false
+      case False => True
+      case True => False
     override def toString: String = s"!(${expression.toString})"
 
-  // Provide implementation for `Conjunction` type
-  //type Conjunction
+
   case class Conjunction(left: Expression, right: Expression) extends Expression:
     def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, True) => True
-      case _ => False // other cases((True, False) ,(False, True) and (False, False)) will return False
+      case _ => False
     override def toString: String = s"(${left.toString} ∧ ${right.toString})"  
 
-  // Provide implementation for `Disjunction` type
-  //type Disjunction
+
   case class Disjunction(left: Expression, right: Expression) extends Expression:
     def evaluate: Boolean =
       if left.evaluate == True then True
       else right.evaluate
     override def toString: String = s"(${left.toString} ∨ ${right.toString}) "
 
-  // Provide implementation for `Implication` type
-  //type Implication
   case class Implication(left: Expression, right: Expression) extends Expression:
     def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, False) => False
-      case _ => True // other cases ((False, False), (False, True) and(True, True)) return True 
+      case _ => True
     override def toString: String = s"(${left.toString} → ${right.toString}) "
 
   def transformImplications(expr: Expression): Expression = expr match {
