@@ -13,11 +13,11 @@ object booleans:
     def substitute(variable: Variable, expression: Expression): Expression
 
   case object True extends Boolean:
-    def evaluate: Expression = this
+    def evaluate: Expression                                               = this
     def substitute(variable: Variable, expression: Expression): Expression = this
 
   case object False extends Boolean:
-    def evaluate: Expression = this
+    def evaluate: Expression                                               = this
     def substitute(variable: Variable, expression: Expression): Expression = this
 
   case class Variable(name: String) extends Expression:
@@ -56,11 +56,9 @@ object booleans:
     def evaluate: Expression =
       if left.evaluate == True then True
       else right.evaluate
-    
 
     def substitute(variable: Variable, expression: Expression): Expression =
       Disjunction(left.substitute(variable, expression), right.substitute(variable, expression))
-
 
     override def toString: String = s"(${left.toString} ∨ ${right.toString})"
 
@@ -79,6 +77,7 @@ object booleans:
     def apply(str: String): Variable = Variable(str)
 
   extension (expr: Expression)
+
     @targetName("Negation")
     infix def unary_! : Negation = Negation(expr)
 
