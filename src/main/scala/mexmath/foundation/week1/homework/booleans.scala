@@ -12,38 +12,44 @@ object booleans:
 
   type True = True.type
   case object True extends Boolean
-  
+
   type False = False.type
   case object False extends Boolean
 
   case class Negation(expression: Expression) extends Expression:
+
     def evaluate: Boolean = expression.evaluate match
       case False => True
-      case True => False
+      case True  => False
+      
     override def toString: String = s"!(${expression.toString})"
 
-
   case class Conjunction(left: Expression, right: Expression) extends Expression:
+
     def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, True) => True
-      case _ => False
-    override def toString: String = s"(${left.toString} ∧ ${right.toString})"  
-
+      case _            => False
+      
+    override def toString: String = s"(${left.toString} ∧ ${right.toString})"
 
   case class Disjunction(left: Expression, right: Expression) extends Expression:
+
     def evaluate: Boolean =
       if left.evaluate == True then True
       else right.evaluate
+      
     override def toString: String = s"(${left.toString} ∨ ${right.toString}) "
 
   case class Implication(left: Expression, right: Expression) extends Expression:
+
     def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, False) => False
-      case _ => True
+      case _             => True
+      
     override def toString: String = s"(${left.toString} → ${right.toString}) "
 
   def transformImplications(expr: Expression): Expression = expr match {
-    case True => True
+    case True  => True
     case False => False
     case Negation(inner) =>
       Negation(transformImplications(inner))
@@ -53,7 +59,7 @@ object booleans:
       Disjunction(transformImplications(left), transformImplications(right))
     case Implication(left, right) =>
       Disjunction(Negation(transformImplications(left)), transformImplications(right))
-  }  
+  }
 
   extension (expr: Expression)
 
@@ -68,6 +74,3 @@ object booleans:
 
     @targetName("Implication")
     infix def →(that: Expression): Implication = Implication(expr, that)
-
-
-    
