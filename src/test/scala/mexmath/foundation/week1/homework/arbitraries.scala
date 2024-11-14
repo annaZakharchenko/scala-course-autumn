@@ -2,7 +2,6 @@ package mexmath.foundation.week1.homework
 
 import mexmath.foundation.week1.homework.booleans.*
 import org.scalacheck.*
-import org.scalacheck.Gen.lzy
 
 object arbitraries:
 

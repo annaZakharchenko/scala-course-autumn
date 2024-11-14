@@ -34,11 +34,11 @@ object booleans:
 
   case class Disjunction(left: Expression, right: Expression) extends Expression:
 
-    def evaluate: Boolean =
-      if left.evaluate == True then True
-      else right.evaluate
-      
-    override def toString: String = s"(${left.toString} ∨ ${right.toString}) "
+    def evaluate: Boolean = (left.evaluate, right.evaluate) match
+      case (False, False) => False
+      case _              => True
+
+    override def toString: String = s"(${left.toString} ∨ ${right.toString})"
 
   case class Implication(left: Expression, right: Expression) extends Expression:
 
@@ -46,7 +46,7 @@ object booleans:
       case (True, False) => False
       case _             => True
       
-    override def toString: String = s"(${left.toString} → ${right.toString}) "
+    override def toString: String = s"(${left.toString} → ${right.toString})"
 
   def transformImplications(expr: Expression): Expression = expr match {
     case True  => True
