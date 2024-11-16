@@ -30,6 +30,7 @@ object booleans:
     override def toString: String = name
 
   case class Negation(expression: Expression) extends Expression:
+
     def evaluate: Expression = expression.evaluate match {
       case True  => False
       case False => True
@@ -42,6 +43,7 @@ object booleans:
     override def toString: String = s"!(${expression.toString})"
 
   case class Conjunction(left: Expression, right: Expression) extends Expression:
+
     def evaluate: Expression = (left.evaluate, right.evaluate) match {
       case (True, True) => True
       case _            => False
@@ -53,6 +55,7 @@ object booleans:
     override def toString: String = s"(${left.toString} ∧ ${right.toString})"
 
   case class Disjunction(left: Expression, right: Expression) extends Expression:
+
     def evaluate: Expression =
       if left.evaluate == True then True
       else right.evaluate
@@ -63,6 +66,7 @@ object booleans:
     override def toString: String = s"(${left.toString} ∨ ${right.toString})"
 
   case class Implication(left: Expression, right: Expression) extends Expression:
+
     def evaluate: Expression = (left.evaluate, right.evaluate) match {
       case (True, False) => False
       case _             => True
