@@ -21,7 +21,7 @@ object booleans:
     def evaluate: Boolean = expression.evaluate match
       case False => True
       case True  => False
-      
+
     override def toString: String = s"!(${expression.toString})"
 
   case class Conjunction(left: Expression, right: Expression) extends Expression:
@@ -29,7 +29,7 @@ object booleans:
     def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, True) => True
       case _            => False
-      
+
     override def toString: String = s"(${left.toString} ∧ ${right.toString})"
 
   case class Disjunction(left: Expression, right: Expression) extends Expression:
@@ -45,7 +45,7 @@ object booleans:
     def evaluate: Boolean = (left.evaluate, right.evaluate) match
       case (True, False) => False
       case _             => True
-      
+
     override def toString: String = s"(${left.toString} → ${right.toString})"
 
   def transformImplications(expr: Expression): Expression = expr match {
