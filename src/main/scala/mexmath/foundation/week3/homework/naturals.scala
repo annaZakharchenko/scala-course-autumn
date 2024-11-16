@@ -2,7 +2,6 @@ package mexmath.foundation.week3.homework
 
 import mexmath.foundation.week3.homework.naturals.{Nat, Succ, Zero}
 
-
 object naturals:
 
   abstract class Nat {
