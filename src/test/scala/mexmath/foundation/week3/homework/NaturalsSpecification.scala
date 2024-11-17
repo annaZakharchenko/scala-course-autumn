@@ -1,10 +1,10 @@
 package mexmath.foundation.week3.homework
 
+import mexmath.foundation.week3.homework.arbitraries.given
 import mexmath.foundation.week3.homework.naturals.{Nat, Succ, Zero}
-import mexmath.foundation.week3.homework.arbitraries.given 
-import org.scalacheck.Properties
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Prop.propBoolean
+import org.scalacheck.Properties
 
 object NaturalsSpecification extends Properties("Naturals"):
 
