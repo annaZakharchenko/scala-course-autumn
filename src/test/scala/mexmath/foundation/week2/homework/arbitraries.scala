@@ -8,34 +8,22 @@ object arbitraries:
 
   val genBoolean: Gen[Boolean] = Gen.oneOf(True, False)
 
-  val genVariableName: Gen[String] = Gen.alphaStr.suchThat(_.nonEmpty)
+  val genVariableName: Gen[String] = ???
 
-  val genVariable: Gen[Variable] =
-    for name <- genVariableName
-    yield Variable(name)
+  val genVariable: Gen[Variable] = ???
 
   val genNegation: Gen[Negation] =
-    for expression <- lzy(genExpression)
-    yield Negation(expression)
+    for expression <- genExpression
+      yield Negation(expression)
 
-  val genConjunction: Gen[Conjunction] = for
-    left  <- lzy(genExpression)
-    right <- lzy(genExpression)
-  yield Conjunction(left, right)
+  val genConjunction: Gen[Conjunction] = ???
 
-  val genDisjunction: Gen[Disjunction] = for
-    left  <- lzy(genExpression)
-    right <- lzy(genExpression)
-  yield Disjunction(left, right)
+  val genDisjunction: Gen[Disjunction] = ???
 
-  val genImplication: Gen[Implication] = for
-    left  <- lzy(genExpression)
-    right <- lzy(genExpression)
-  yield Implication(left, right)
+  val genImplication: Gen[Implication] = ???
 
-  lazy val genExpression: Gen[Expression] =
-    Gen.frequency((1, genBoolean), (1, genVariable), (1, genNegation), (1, genConjunction), (1, genDisjunction), (1, genImplication))
+  lazy val genExpression: Gen[Expression] = ???
 
-  given Arbitrary[Boolean]    = Arbitrary(genBoolean)
-  given Arbitrary[Variable]   = Arbitrary(genVariable)
-  given Arbitrary[Expression] = Arbitrary(genExpression)
+  given Arbitrary[Boolean]    = ???
+  given Arbitrary[Variable]   = ???
+  given Arbitrary[Expression] = ???
