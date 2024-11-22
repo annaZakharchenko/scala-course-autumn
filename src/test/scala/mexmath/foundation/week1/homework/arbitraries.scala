@@ -10,7 +10,7 @@ object arbitraries:
 
   val genNegation: Gen[Negation] =
     for expression <- genExpression
-      yield Negation(expression)
+    yield Negation(expression)
 
   val genConjunction: Gen[Conjunction] = ???
 
