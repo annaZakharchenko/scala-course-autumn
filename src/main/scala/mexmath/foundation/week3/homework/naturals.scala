@@ -2,7 +2,7 @@ package mexmath.foundation.week3.homework
 
 object naturals:
 
-  trait Nat:
+  abstract class Nat:
     def isZero: Boolean
     def predecessor: Nat
     def successor: Nat = ???
