@@ -4,6 +4,7 @@ import scala.annotation.targetName
 
 object booleans:
 
+
   sealed trait Expression:
     def evaluate: Expression
     def substitute(variable: Variable, expression: Expression): Expression
