@@ -18,48 +18,18 @@ object booleans:
 
   case class Negation(expression: Expression) extends Expression:
 
-    def evaluate: Boolean = expression.evaluate match
-      case False => True
-      case True  => False
+    def evaluate: Boolean = ???
 
-    override def toString: String = s"!(${expression.toString})"
+    override def toString: String = ???
 
-  case class Conjunction(left: Expression, right: Expression) extends Expression:
+  // Provide implementation for `Conjunction` type
+  type Conjunction
 
-    def evaluate: Boolean = (left.evaluate, right.evaluate) match
-      case (True, True) => True
-      case _            => False
+  // Provide implementation for `Disjunction` type
+  type Disjunction
 
-    override def toString: String = s"(${left.toString} ∧ ${right.toString})"
-
-  case class Disjunction(left: Expression, right: Expression) extends Expression:
-
-    def evaluate: Boolean = (left.evaluate, right.evaluate) match
-      case (False, False) => False
-      case _              => True
-
-    override def toString: String = s"(${left.toString} ∨ ${right.toString})"
-
-  case class Implication(left: Expression, right: Expression) extends Expression:
-
-    def evaluate: Boolean = (left.evaluate, right.evaluate) match
-      case (True, False) => False
-      case _             => True
-
-    override def toString: String = s"(${left.toString} → ${right.toString})"
-
-  def transformImplications(expr: Expression): Expression = expr match {
-    case True  => True
-    case False => False
-    case Negation(inner) =>
-      Negation(transformImplications(inner))
-    case Conjunction(left, right) =>
-      Conjunction(transformImplications(left), transformImplications(right))
-    case Disjunction(left, right) =>
-      Disjunction(transformImplications(left), transformImplications(right))
-    case Implication(left, right) =>
-      Disjunction(Negation(transformImplications(left)), transformImplications(right))
-  }
+  // Provide implementation for `Implication` type
+  type Implication
 
   extension (expr: Expression)
 
@@ -67,10 +37,10 @@ object booleans:
     infix def unary_! : Negation = Negation(expr)
 
     @targetName("Conjunction")
-    infix def ∧(that: Expression): Conjunction = Conjunction(expr, that)
+    infix def ∧(that: Expression): Conjunction = ???
 
     @targetName("Disjunction")
-    infix def ∨(that: Expression): Disjunction = Disjunction(expr, that)
+    infix def ∨(that: Expression): Disjunction = ???
 
     @targetName("Implication")
-    infix def →(that: Expression): Implication = Implication(expr, that)
+    infix def →(that: Expression): Implication = ???
