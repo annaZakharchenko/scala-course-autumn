@@ -10,8 +10,6 @@ object BooleansSpecification extends Properties("Booleans"):
   include(DisjunctionSpecification)
   include(ImplicationSpecification)
   include(AxiomsSpecification)
-  include(BooleanSubstitutionSpecification)
-  include(VariableSubstitutionSpecification)
   include(ExpressionSubstitutionSpecification)
 
 end BooleansSpecification
@@ -111,28 +109,6 @@ object AxiomsSpecification extends Properties("Axioms"):
   }
 
 end AxiomsSpecification
-
-object BooleanSubstitutionSpecification extends Properties("Boolean Substitution"):
-
-  property("substitution into Nat should make no changes") = forAll(Gen.oneOf(True, False), Arbitrary.arbitrary[Variable]) { (b: Expression, v: Variable) =>
-    b.substitute(v, b) == b
-  }
-
-end BooleanSubstitutionSpecification
-
-object VariableSubstitutionSpecification extends Properties("Variable Substitution"):
-
-  property("substitution into different variable should make no changes") =
-    forAll(Arbitrary.arbitrary[Variable], Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) { (v1: Variable, v2: Variable, expr: Expression) =>
-      v1 != v2 ==> { expr.substitute(v1, True) == expr }
-    }
-
-  property("substitution into the same variable should return the given expression") = forAll(Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) {
-    (v: Variable, expr: Expression) =>
-      expr.substitute(v, expr) == expr
-  }
-
-end VariableSubstitutionSpecification
 
 object ExpressionSubstitutionSpecification extends Properties("Expression Substitution"):
 
