@@ -1,5 +1,3 @@
-package mexmath.foundation.week2.homework
-
 import mexmath.foundation.week2.homework.arbitraries.given
 import mexmath.foundation.week2.homework.booleans.*
 import org.scalacheck.*
@@ -24,84 +22,146 @@ object NegationSpecification extends Properties("Negation"):
     (!True).evaluate == False
   }
 
-  property("!False is True") = ???
+  property("!False is True") = propBoolean {
+    (!False).evaluate == True
+  }
 
 end NegationSpecification
 
 object ConjunctionSpecification extends Properties("Conjunction"):
 
-  property("True ∧ value is value") = forAll { (value: Boolean) =>
-    ???
+  property("True ∧ value is value") = forAll(Gen.oneOf(True, False)) { (value: Expression) =>
+    (True ∧ value).evaluate == value
   }
 
-  property("False ∧ value is False") = ???
+  property("False ∧ value is False") = forAll(Gen.oneOf(True, False)) { (value: Expression) =>
+    (False ∧ value).evaluate == False
+  }
 
 end ConjunctionSpecification
 
 object DisjunctionSpecification extends Properties("Disjunction"):
 
-  property("True ∨ value is True") = ???
+  property("True ∨ value is True") = forAll(Gen.oneOf(True, False)) { (value: Expression) =>
+    (True ∨ value).evaluate == True
+  }
 
-  property("False ∨ value is value") = ???
+  property("False ∨ value is value") = forAll(Gen.oneOf(True, False)) { (value: Expression) =>
+    (False ∨ value).evaluate == value
+  }
 
 end DisjunctionSpecification
 
 object ImplicationSpecification extends Properties("Implication"):
 
-  property("True → value is value") = ???
+  property("True → value is value") = forAll(Gen.oneOf(True, False)) { (value: Expression) =>
+    (True → value).evaluate == value
+  }
 
-  property("False → value is True") = ???
+  property("False → value is True") = forAll(Gen.oneOf(True, False)) { (value: Expression) =>
+    (False → value).evaluate == True
+  }
 
 end ImplicationSpecification
 
 object AxiomsSpecification extends Properties("Axioms"):
 
-  property("a → (b → a)") = ???
+  property("a → (b → a)") = forAll(Gen.oneOf(True, False), Gen.oneOf(True, False)) { (a: Expression, b: Expression) =>
+    (a → (b → a)).evaluate == True
+  }
 
-  property("(a → (b → c)) → ((a → b) → (a → c))") = ???
+  property("(a → (b → c)) → ((a → b) → (a → c))") = forAll(Gen.oneOf(True, False), Gen.oneOf(True, False), Gen.oneOf(True, False)) {
+    (a: Expression, b: Expression, c: Expression) => ((a → (b → c)) → ((a → b) → (a → c))).evaluate == True
+  }
 
-  property("(a ∧ b) → a") = ???
+  property("(a ∧ b) → a") = forAll(Gen.oneOf(True, False), Gen.oneOf(True, False)) { (a: Expression, b: Expression) =>
+    ((a ∧ b) → a).evaluate == True
+  }
 
-  property("(a ∧ b) → b") = ???
+  property("(a ∧ b) → b") = forAll(Gen.oneOf(True, False), Gen.oneOf(True, False)) { (a: Expression, b: Expression) =>
+    ((a ∧ b) → b).evaluate == True
+  }
 
-  property("a → (b → (a ∧ b))") = ???
+  property("a → (b → (a ∧ b))") = forAll(Gen.oneOf(True, False), Gen.oneOf(True, False)) { (a: Expression, b: Expression) =>
+    (a → (b → (a ∧ b))).evaluate == True
+  }
 
-  property("a → (a ∨ b)") = ???
+  property("a → (a ∨ b)") = forAll(Gen.oneOf(True, False), Gen.oneOf(True, False)) { (a: Expression, b: Expression) =>
+    (a → (a ∨ b)).evaluate == True
+  }
 
-  property("b → (a ∨ b)") = ???
+  property("b → (a ∨ b)") = forAll(Gen.oneOf(True, False), Gen.oneOf(True, False)) { (a: Expression, b: Expression) =>
+    (b → (a ∨ b)).evaluate == True
+  }
 
-  property("(a → c) → ((b → c) → ((a ∨ b) → c))") = ???
+  property("(a → c) → ((b → c) → ((a ∨ b) → c))") = forAll(Gen.oneOf(True, False), Gen.oneOf(True, False), Gen.oneOf(True, False)) {
+    (a: Expression, b: Expression, c: Expression) => ((a → c) → ((b → c) → ((a ∨ b) → c))).evaluate == True
+  }
 
-  property("!a → (a → b)") = ???
+  property("!a → (a → b)") = forAll(Gen.oneOf(True, False), Gen.oneOf(True, False)) { (a: Expression, b: Expression) =>
+    (!a → (a → b)).evaluate == True
+  }
 
-  property("(a → b) → ((a → !b) → !a)") = ???
+  property("(a → b) → ((a → !b) → !a)") = forAll(Gen.oneOf(True, False), Gen.oneOf(True, False)) { (a: Expression, b: Expression) =>
+    ((a → b) → ((a → !b) → !a)).evaluate == True
+  }
 
-  property("a ∨ !a") = ???
+  property("a ∨ !a") = forAll(Gen.oneOf(True, False)) { (a: Expression) =>
+    (a ∨ !a).evaluate == True
+  }
 
 end AxiomsSpecification
 
 object BooleanSubstitutionSpecification extends Properties("Boolean Substitution"):
 
-  property("substitution into Nat should make no changes") = ???
+  property("substitution into Nat should make no changes") =
+    forAll(Arbitrary.arbitrary[Expression], Arbitrary.arbitrary[Variable], Arbitrary.arbitrary[Expression]) {
+      (nat: Expression, v: Variable, expression: Expression) =>
+        nat.substitute(v, expression) == nat
+    }
 
 end BooleanSubstitutionSpecification
 
 object VariableSubstitutionSpecification extends Properties("Variable Substitution"):
 
-  property("substitution into different variable should make no changes") = ???
+  property("substitution into different variable should make no changes") =
+    forAll(Arbitrary.arbitrary[Variable], Arbitrary.arbitrary[Variable], Arbitrary.arbitrary[Expression]) {
+      (variable1: Variable, variable2: Variable, expression: Expression) =>
+        variable1 != variable2 ==> {
+          variable1.substitute(variable2, expression) == variable1
+        }
+    }
 
-  property("substitution into the same variable should return the given expression") = ???
+  property("substitution into the same variable should return the given expression") = forAll(Arbitrary.arbitrary[Variable], Arbitrary.arbitrary[Expression]) {
+    (variable: Variable, expression: Expression) =>
+      variable.substitute(variable, expression) == expression
+  }
 
 end VariableSubstitutionSpecification
 
 object ExpressionSubstitutionSpecification extends Properties("Expression Substitution"):
 
-  property("substitution into !expression should be equal to !(substitution into expression)") = ???
+  property("substitution into !expression should be equal to !(substitution into expression)") =
+    forAll(Gen.oneOf(True, False), Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) { (expr: Expression, v: Variable, expression: Expression) =>
+      (!expr).substitute(v, expression) == !expr.substitute(v, expression)
+    }
 
-  property("substitution into left ∧ right should be equal to substitution into left ∧ substitution into right") = ???
+  property("substitution into left ∧ right should be equal to substitution into left ∧ substitution into right") =
+    forAll(Gen.oneOf(True, False), Gen.oneOf(True, False), Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) {
+      (left: Expression, right: Expression, v: Variable, expression: Expression) =>
+        (left ∧ right).substitute(v, expression) == left.substitute(v, expression) ∧ right.substitute(v, expression)
+    }
 
-  property("substitution into left ∨ right should be equal to substitution into left ∨ substitution into right") = ???
+  property("substitution into left ∨ right should be equal to substitution into left ∨ substitution into right") =
+    forAll(Gen.oneOf(True, False), Gen.oneOf(True, False), Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) {
+      (left: Expression, right: Expression, v: Variable, expression: Expression) =>
+        (left ∨ right).substitute(v, expression) == left.substitute(v, expression) ∨ right.substitute(v, expression)
+    }
 
-  property("substitution into left → right should be equal to substitution into left → substitution into right") = ???
+  property("substitution into left → right should be equal to substitution into left → substitution into right") =
+    forAll(Gen.oneOf(True, False), Gen.oneOf(True, False), Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) {
+      (left: Expression, right: Expression, v: Variable, expression: Expression) =>
+        (left → right).substitute(v, expression) == left.substitute(v, expression) → right.substitute(v, expression)
+    }
 
 end ExpressionSubstitutionSpecification
