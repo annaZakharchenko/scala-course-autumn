@@ -116,8 +116,8 @@ object BooleanSubstitutionSpecification extends Properties("Boolean Substitution
 
   property("substitution into Nat should make no changes") =
     forAll(Arbitrary.arbitrary[Expression], Arbitrary.arbitrary[Variable], Arbitrary.arbitrary[Expression]) {
-      (nat: Expression, v: Variable, replacement: Expression) =>
-        nat.substitute(v, replacement) == nat
+      (nat: Expression, v: Variable, expression: Expression) =>
+        nat.substitute(v, expression) == nat
     }
 
 end BooleanSubstitutionSpecification
@@ -126,15 +126,15 @@ object VariableSubstitutionSpecification extends Properties("Variable Substituti
 
   property("substitution into different variable should make no changes") =
     forAll(Arbitrary.arbitrary[Variable], Arbitrary.arbitrary[Variable], Arbitrary.arbitrary[Expression]) {
-      (variable1: Variable, variable2: Variable, replacement: Expression) =>
+      (variable1: Variable, variable2: Variable, expression: Expression) =>
         variable1 != variable2 ==> {
-          variable1.substitute(variable2, replacement) == variable1
+          variable1.substitute(variable2, expression) == variable1
         }
     }
 
   property("substitution into the same variable should return the given expression") = forAll(Arbitrary.arbitrary[Variable], Arbitrary.arbitrary[Expression]) {
-    (variable: Variable, replacement: Expression) =>
-      variable.substitute(variable, replacement) == replacement
+    (variable: Variable, expression: Expression) =>
+      variable.substitute(variable, expression) == expression
   }
 
 end VariableSubstitutionSpecification
@@ -142,26 +142,26 @@ end VariableSubstitutionSpecification
 object ExpressionSubstitutionSpecification extends Properties("Expression Substitution"):
 
   property("substitution into !expression should be equal to !(substitution into expression)") =
-    forAll(Gen.oneOf(True, False), Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) { (expr: Expression, v: Variable, replacement: Expression) =>
-      (!expr).substitute(v, replacement) == !expr.substitute(v, replacement)
+    forAll(Gen.oneOf(True, False), Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) { (expr: Expression, v: Variable, expression: Expression) =>
+      (!expr).substitute(v, expression) == !expr.substitute(v, expression)
     }
 
   property("substitution into left ∧ right should be equal to substitution into left ∧ substitution into right") =
     forAll(Gen.oneOf(True, False), Gen.oneOf(True, False), Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) {
-      (left: Expression, right: Expression, v: Variable, replacement: Expression) =>
-        (left ∧ right).substitute(v, replacement) == left.substitute(v, replacement) ∧ right.substitute(v, replacement)
+      (left: Expression, right: Expression, v: Variable, expression: Expression) =>
+        (left ∧ right).substitute(v, expression) == left.substitute(v, expression) ∧ right.substitute(v, expression)
     }
 
   property("substitution into left ∨ right should be equal to substitution into left ∨ substitution into right") =
     forAll(Gen.oneOf(True, False), Gen.oneOf(True, False), Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) {
-      (left: Expression, right: Expression, v: Variable, replacement: Expression) =>
-        (left ∨ right).substitute(v, replacement) == left.substitute(v, replacement) ∨ right.substitute(v, replacement)
+      (left: Expression, right: Expression, v: Variable, expression: Expression) =>
+        (left ∨ right).substitute(v, expression) == left.substitute(v, expression) ∨ right.substitute(v, expression)
     }
 
   property("substitution into left → right should be equal to substitution into left → substitution into right") =
     forAll(Gen.oneOf(True, False), Gen.oneOf(True, False), Arbitrary.arbitrary[Variable], Gen.oneOf(True, False)) {
-      (left: Expression, right: Expression, v: Variable, replacement: Expression) =>
-        (left → right).substitute(v, replacement) == left.substitute(v, replacement) → right.substitute(v, replacement)
+      (left: Expression, right: Expression, v: Variable, expression: Expression) =>
+        (left → right).substitute(v, expression) == left.substitute(v, expression) → right.substitute(v, expression)
     }
 
 end ExpressionSubstitutionSpecification
